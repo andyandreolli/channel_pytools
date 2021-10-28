@@ -3,5 +3,5 @@ A python package with tools to read and postprocess the output of the channel dn
 
 ## Installation
 ```bash
-pip install git+https://github.com/jkbr/httpie.git#egg=httpie
+pip install git+https://github.com/andyandreolli/channel_pytools#egg=channel_pytools
 ```
