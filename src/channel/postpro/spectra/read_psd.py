@@ -25,7 +25,8 @@ def read_psd(fdir, **kwargs):
     diskacc = np.memmap(fname, mode='r', dtype=np.float64, shape=(6, mesh.ny+1, mesh.nz+1, mesh.nx+1))
 
     # check file size and allocate memory
-    tct.io.size_ram_check(fname)
+    if has_tactical:
+        tct.io.size_ram_check(fname)
     all_spectra = np.zeros((6, mesh.ny+1, mesh.nz+1, mesh.nx+1))
 
     # load
