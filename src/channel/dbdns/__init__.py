@@ -1,1 +1,1 @@
-from dbdns.dbdns import *
+from channel.dbdns.dbdns import *
