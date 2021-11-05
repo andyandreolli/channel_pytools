@@ -34,8 +34,8 @@ class mesh():
         self.lz_pih = 2 / self.beta0
 
         # calculate resolution
-        self.dx = self.lx_pih/(2*self.nx) * pi
-        self.dz = self.lz_pih/(2*self.nz) * pi
+        self.dx = self.lx_pih/(2*self.nx+1) * pi
+        self.dz = self.lz_pih/(2*self.nz+1) * pi
         self.dyw = abs(self.y[1] - self.y[2]) # watch out for ghost cell!
         idxy = floor((self.ny + 3) / 2)
         self.dyc = abs(self.y[idxy] - self.y[idxy+1])
