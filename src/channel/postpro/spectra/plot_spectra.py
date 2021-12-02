@@ -164,6 +164,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     save_fig = kwargs.get('save_fig', False) # you can pass a string to this (the name of the file that you want to save)
     y_symm = kwargs.get('y_symm', True)
     retau = kwargs.get('retau', 0)
+    dclim = kwargs.get('clim', 0)
     re = kwargs.get('re', 0)
     cmp = gcmp(component)
 
@@ -177,6 +178,11 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         all_spectra /= (utau**2)
         y *= retau
         kz /= retau
+
+    # check that clim is a vector
+    if dclim:
+        if not len(clim) == 2:
+            raise Exception('clim needs to be iterable with two elements.')
 
     # function specific parameters
     labels = (r'$k_z$', r'$y$')
@@ -237,6 +243,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         if ylog:
             ax.set_yscale("log")
         plt_handle = ax.pcolormesh(kz[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
+        plt_handle.clim(dclim[0],dclim[1])
         if y_symm:
             ax.set_ylim([0,1])
         # save figure
