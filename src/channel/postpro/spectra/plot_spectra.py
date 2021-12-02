@@ -243,7 +243,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         if ylog:
             ax.set_yscale("log")
         plt_handle = ax.pcolormesh(kz[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
-        plt_handle.clim(dclim[0],dclim[1])
+        plt_handle.set_clim(dclim[0],dclim[1])
         if y_symm:
             ax.set_ylim([0,1])
         # save figure
