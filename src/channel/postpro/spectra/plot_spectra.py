@@ -112,11 +112,12 @@ def plot_premultiplied(all_spectra, component, desired_y, y, kx, kz, **kwargs):
             ax.set_xscale("log")
         if ylog:
             ax.set_yscale("log")
-        ax.pcolormesh(kx[1:], kz[1:], premultiplied[y_idx, 1:, 1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
+        plt_handle = ax.pcolormesh(kx[1:], kz[1:], premultiplied[y_idx, 1:, 1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
         # save figure
         savefig('spectra/'+save_name+'.png', format='png', bbox_inches='tight', pad_inches=0)
         # save tikz code
-        generate_tikz(save_name, save_size, labels, fig_title, ax.get_xlim(), ax.get_ylim(), xlog=xlog, ylog=ylog)
+        clim_min, clim_max = plt_handle.get_clim()
+        generate_tikz(save_name, save_size, labels, fig_title, ax.get_xlim(), ax.get_ylim(), clim_min, clim_max, xlog=xlog, ylog=ylog)
         # close figure, so that it does not get plotted
         plt.close(111)
     
@@ -403,7 +404,7 @@ def generate_tex_colormap():
 
 
 
-def generate_tikz(fname, size, labels, title, xlim, ylim, **kwargs):
+def generate_tikz(fname, size, labels, title, xlim, ylim, clim_min, clim_max, **kwargs):
 
     xlog = kwargs.get('xlog', True)
     ylog = kwargs.get('ylog', True)
@@ -436,7 +437,7 @@ def generate_tikz(fname, size, labels, title, xlim, ylim, **kwargs):
              {ymode}
              ylabel={{{ylabel}}},
              view={{0}}{{90}},
-             point meta min=0,point meta max=3.8, colorbar,
+             point meta min={clim_min},point meta max={clim_max}, colorbar,
              colorbar style={{title={{{title}}},height=(\pgfkeysvalueof{{/pgfplots/parent axis height}}-3\\baselineskip),at={{(1.1,0)}},anchor=south west}},
              xmin={xlim[0]}, xmax={xlim[1]}, ymin={ylim[0]}, ymax={ylim[1]},
              scaled ticks=false,
