@@ -170,12 +170,13 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     if (retau or re) and not (retau and re):
         raise Exception('Please provide both re and retau as arguments.')
         exit()
-    # get utau
-    utau = retau/re
-    # perform nondimensionalisation
-    all_spectra /= (utau**2)
-    y *= retau
-    kz /= retau
+    if retau:
+        # get utau
+        utau = retau/re
+        # perform nondimensionalisation
+        all_spectra /= (utau**2)
+        y *= retau
+        kz /= retau
 
     # function specific parameters
     labels = (r'$k_z$', r'$y$')
