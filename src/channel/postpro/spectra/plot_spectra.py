@@ -162,14 +162,13 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     save_size = kwargs.get('save_size', (1,1)); w = save_size[0]; h = save_size[1]
     save_fig = kwargs.get('save_fig', False) # you can pass a string to this (the name of the file that you want to save)
     y_symm = kwargs.get('y_symm', True)
-    retau = kwargs.get('retau', None)
-    re = kwargs.get('retau', None)
+    retau = kwargs.get('retau', 0)
+    re = kwargs.get('retau', 0)
     cmp = gcmp(component)
 
     # check that both retau and re are passed
     if (retau or re) and not (retau and re):
         raise Exception('Please provide both re and retau as arguments.')
-        exit()
     if retau:
         # get utau
         utau = retau/re
