@@ -160,9 +160,22 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
 
     # unpack input
     save_size = kwargs.get('save_size', (1,1)); w = save_size[0]; h = save_size[1]
-    save_fig = kwargs.get('save_fig', False)
+    save_fig = kwargs.get('save_fig', False) # you can pass a string to this (the name of the file that you want to save)
     y_symm = kwargs.get('y_symm', True)
+    retau = kwargs.get('retau', None)
+    re = kwargs.get('retau', None)
     cmp = gcmp(component)
+
+    # check that both retau and re are passed
+    if (retau or re) and not (retau and re):
+        raise Exception('Please provide both re and retau as arguments.')
+        exit()
+    # get utau
+    utau = retau/re
+    # perform nondimensionalisation
+    all_spectra /= (utau**2)
+    y *= retau
+    kz /= retau
 
     # function specific parameters
     labels = (r'$k_z$', r'$y$')
@@ -170,7 +183,10 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     fig_title = r'$k_z\sum_{k_x} \langle \hat{'+cmp[0]+r'}^\dagger\hat{'+cmp[1]+r'} \rangle$'
     xlog = True
     ylog = False
-    save_name = cmp + '_cumulative_zy'
+    if isinstance(save_fig, str):
+        save_name = save_fig
+    else:
+        save_name = cmp + '_cumulative_zy'
 
     # convert component to index
     idx = get_comp_idx(component)
@@ -181,7 +197,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     # sum along x-axis
     spectrum = spectrum.sum(axis=(-1))
 
-    # premultiply (reshape kz for broadcasting)
+    # premultiply
     premultiplied = spectrum * abs(kz)
 
     # prepare figure for plotting
