@@ -242,7 +242,8 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         # save figure
         savefig('spectra/'+save_name+'.png', format='png', bbox_inches='tight', pad_inches=0)
         # save tikz code
-        generate_tikz(save_name, save_size, labels, fig_title, ax.get_xlim(), ax.get_ylim(), xlog=xlog, ylog=ylog)
+        clim_min, clim_max = plt_handle.get_clim()
+        generate_tikz(save_name, save_size, labels, fig_title, ax.get_xlim(), ax.get_ylim(), clim_min, clim_max, xlog=xlog, ylog=ylog)
         # close figure, so that it does not get plotted
         plt.close(111)
 
