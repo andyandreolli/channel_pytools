@@ -181,7 +181,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
 
     # check that clim is a vector
     if dclim:
-        if not len(clim) == 2:
+        if not len(dclim) == 2:
             raise Exception('clim needs to be iterable with two elements.')
 
     # function specific parameters
