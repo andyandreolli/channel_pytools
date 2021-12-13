@@ -166,6 +166,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     retau = kwargs.get('retau', 0)
     dclim = kwargs.get('clim', 0)
     re = kwargs.get('re', 0)
+    ylog = kwargs.get('ylog', False)
     cmp = gcmp(component)
 
     # check that both retau and re are passed
@@ -188,8 +189,6 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     labels = (r'$k_z$', r'$y$')
     xlabel_alt = r'$\lambda_z$'
     fig_title = r'$k_z\sum_{k_x} \langle \hat{'+cmp[0]+r'}^\dagger\hat{'+cmp[1]+r'} \rangle$'
-    xlog = True
-    ylog = False
     if isinstance(save_fig, str):
         save_name = save_fig
     else:
@@ -210,9 +209,8 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     # prepare figure for plotting
     rfig, (rax,cb_ax) = subplots(ncols=2,figsize=(10,7),gridspec_kw={"width_ratios":[1, 0.05]})
 
-    # set some scales to be logarithmic
-    if xlog:
-        rax.set_xscale("log")
+    # set scales to be logarithmic where requested
+    rax.set_xscale("log") # x axis always logarithmic!
     if ylog:
         rax.set_yscale("log")
 
@@ -243,8 +241,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         ax = plt.Axes(fig, [0., 0., 1., 1.])
         ax.set_axis_off()
         fig.add_axes(ax)
-        if xlog:
-            ax.set_xscale("log")
+        ax.set_xscale("log") xlog
         if ylog:
             ax.set_yscale("log")
         plt_handle = ax.pcolormesh(kz[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
@@ -259,7 +256,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         savefig('spectra/'+save_name+'.png', format='png', bbox_inches='tight', pad_inches=0)
         # save tikz code
         clim_min, clim_max = plt_handle.get_clim()
-        generate_tikz(save_name, save_size, labels, fig_title, ax.get_xlim(), ax.get_ylim(), clim_min, clim_max, xlog=xlog, ylog=ylog)
+        generate_tikz(save_name, save_size, labels, fig_title, ax.get_xlim(), ax.get_ylim(), clim_min, clim_max, xlog=True, ylog=ylog)
         # close figure, so that it does not get plotted
         plt.close(111)
 
