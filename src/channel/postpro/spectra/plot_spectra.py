@@ -231,7 +231,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     rfig.colorbar(pos, cax=cb_ax)
     rax.set_title(fig_title)
     if y_symm:
-        ax.set_ylim(y[1], y[ymiddle])
+        rax.set_ylim(y[1], y[ymiddle])
 
     # save
     if save_fig:
