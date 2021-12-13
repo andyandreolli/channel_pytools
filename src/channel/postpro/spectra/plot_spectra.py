@@ -241,7 +241,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         ax = plt.Axes(fig, [0., 0., 1., 1.])
         ax.set_axis_off()
         fig.add_axes(ax)
-        ax.set_xscale("log") xlog
+        ax.set_xscale("log")
         if ylog:
             ax.set_yscale("log")
         plt_handle = ax.pcolormesh(kz[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
