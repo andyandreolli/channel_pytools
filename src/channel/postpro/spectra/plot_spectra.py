@@ -179,6 +179,8 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         all_spectra /= (utau**2)
         y *= retau
         kz /= retau
+    # calculate ymiddle
+    ymiddle = np.ceil(len(y)/2)-1
 
     # check that clim is a vector
     if dclim:
@@ -229,10 +231,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     rfig.colorbar(pos, cax=cb_ax)
     rax.set_title(fig_title)
     if y_symm:
-        if retau:
-            rax.set_ylim([0,retau])
-        else:
-            rax.set_ylim([0,1])
+        ax.set_ylim(y[1], y[ymiddle])
 
     # save
     if save_fig:
@@ -248,10 +247,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         if dclim:
             plt_handle.set_clim(dclim[0],dclim[1])
         if y_symm:
-            if retau:
-                ax.set_ylim([0,retau])
-            else:
-                ax.set_ylim([0,1])
+            ax.set_ylim(y[1], y[ymiddle])
         # save figure
         savefig('spectra/'+save_name+'.png', format='png', bbox_inches='tight', pad_inches=0)
         # save tikz code
