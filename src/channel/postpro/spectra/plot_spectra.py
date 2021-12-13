@@ -180,7 +180,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         y *= retau
         kz /= retau
     # calculate ymiddle
-    ymiddle = np.ceil(len(y)/2)-1
+    ymiddle = int(np.ceil(len(y)/2))-1
 
     # check that clim is a vector
     if dclim:
