@@ -218,6 +218,8 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
 
     # when plotting, 0 modes are excluded
     pos = rax.pcolormesh(kz[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
+    if dclim:
+        pos.set_clim(dclim[0],dclim[1])
     rax.set_xlabel(labels[0])
     rax.set_ylabel(labels[1])
 
@@ -229,7 +231,10 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     rfig.colorbar(pos, cax=cb_ax)
     rax.set_title(fig_title)
     if y_symm:
-        rax.set_ylim([0,1])
+        if retau:
+            rax.set_ylim([0,retau])
+        else:
+            rax.set_ylim([0,1])
 
     # save
     if save_fig:
@@ -246,7 +251,10 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         if dclim:
             plt_handle.set_clim(dclim[0],dclim[1])
         if y_symm:
-            ax.set_ylim([0,1])
+            if retau:
+                ax.set_ylim([0,retau])
+            else:
+                ax.set_ylim([0,1])
         # save figure
         savefig('spectra/'+save_name+'.png', format='png', bbox_inches='tight', pad_inches=0)
         # save tikz code
@@ -259,8 +267,8 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
 
 
 
-
-
+# please remove this function! migrate it into plot_cumulative_xz
+'''
 def plot_cumulative_xy(all_spectra, component, y, kx, **kwargs):
 
     # unpack input
@@ -335,7 +343,7 @@ def plot_cumulative_xy(all_spectra, component, y, kx, **kwargs):
         plt.close(111)
 
     return rfig, rax
-
+'''
 
 
 
