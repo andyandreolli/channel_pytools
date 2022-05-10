@@ -3,12 +3,11 @@ import pandas as pd
 
 def read(fdir, **kwargs):
 
-    # runtimePanda, mePanda, uvPanda, uuPanda, vvPanda, wwPanda, kkPanda, mkPanda = read(fdir, invert_sss=False, variant=None, head_len=1)
-    # Reads Runtimedata and output of uiuj; returns a tuple of Pandas dataframes
+    # mePanda, uvPanda, uuPanda, vvPanda, wwPanda, kkPanda, mkPanda = read(fdir, invert_sss=False, variant=None, head_len=1)
+    # Reads output of uiuj; returns a tuple of Pandas dataframes
 
     # INPUT DESCRIPTION
-    # fidr: string - directory where output of uiuj and Runtimedata is contained
-    invert_sss = kwargs.get('invert_sss', False)   # if true, inverts the sign of shear stress on top wall from runtimedata
+    # fidr: string - directory where output of uiuj is contained
     variant = kwargs.get('variant', None)   # variant of uiuj used for postprocessing
     head_len = kwargs.get('head_len', 1) # length of header (notice that the column names should be OUTSIDE OF HEADER!)
 
@@ -31,45 +30,32 @@ def read(fdir, **kwargs):
     kkPanda = pd.read_csv(fdir + filenames[5], header = head_len, delim_whitespace=True) # turbulent kinetic energy
     
 
-    # read mke and runtimedata
+    # read mke
 
     if variant=='large' or variant =='small':
         
         mkPanda = None
         mePanda = None
-        runtimePanda = None
     
     else:
         
         mkPanda = pd.read_csv(fdir + filenames[6], header = head_len, delim_whitespace=True) # mean kinetic energy
         mePanda = pd.read_csv(fdir + filenames[0], header = head_len, delim_whitespace=True) # mean field
         
-        # read Runtimedata
-
-        runtimePanda = pd.read_csv(fdir + '../Runtimedata', header=None, delim_whitespace=True)
-        _, cols = runtimePanda.shape
-
-        if cols == 11: # column names are assigned depending on which program generated Runtimedata
-            runtimePanda.columns = ['t', 'Uy_bottom', 'Uy_top', 'Wy_bottom', 'Wy_top', 'Ub', 'Px', 'Ut', 'Pt', 'CFL', 'dt']
-        else:
-            runtimePanda.columns = ['t', 'Uy_bottom', 'Uy_top', 'Wy_bottom', 'Wy_top', 'Ub', 'Px', 'Ut', 'Pt', 'CFL', 'dt', 'non', 'so'] # FIXME: controlla
-
-        if invert_sss: # if requested by user, invert sign of shear stress at top wall
-            runtimePanda['Uy_top'] = -runtimePanda['Uy_top']
 
 
-    return runtimePanda, mePanda, uvPanda, uuPanda, vvPanda, wwPanda, kkPanda, mkPanda
+    return mePanda, uvPanda, uuPanda, vvPanda, wwPanda, kkPanda, mkPanda
 
 
 
 def read_integrals(fdir, **kwargs):
 
-    # runtimePanda, mePanda, uvPanda, uuPanda, vvPanda, wwPanda, kkPanda, mkPanda = read(fdir, invert_sss=False, variant=None, head_len=1)
-    # Reads Runtimedata and output of uiuj; returns a tuple of Pandas dataframes
+    # mePanda, uvPanda, uuPanda, vvPanda, wwPanda, kkPanda, mkPanda = read(fdir, invert_sss=False, variant=None, head_len=1)
+    # Reads output of uiuj; returns a tuple of Pandas dataframes
 
     # INPUT DESCRIPTION
-    # fidr: string - directory where output of uiuj and Runtimedata is contained
-    variant = kwargs.get('variant', None)   # variant of uiuj used for postprocessing
+    # fidr: string - directory where output of uiuj is contained
+    variant = kwargs.get('variant', None) # variant of uiuj used for postprocessing
     head_len = kwargs.get('head_len', 1) # length of header (notice that the column names should be OUTSIDE OF HEADER!)
 
     # filenames

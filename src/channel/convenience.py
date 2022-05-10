@@ -1,4 +1,5 @@
 import numpy
+import pandas as pd
 from struct import unpack
 from math import pi, floor
 
@@ -226,3 +227,23 @@ def rawline_dnsin(dnsin):
     preprocessed = dnsin.readline().split("!")[0].split()
     preprocessed = [entry for entry in preprocessed if not (entry=="" or entry=="\t")]
     return preprocessed
+
+
+
+def read_runtimedata(rtd_file, **kwargs):
+
+        invert_sss = kwargs.get('invert_sss', False)   # if true, inverts the sign of shear stress on top wall from runtimedata
+
+        # read from disk
+        runtimePanda = pd.read_csv(rtd_file, header=None, delim_whitespace=True)
+        _, cols = runtimePanda.shape
+
+        if cols == 11: # column names are assigned depending on which program generated Runtimedata
+            runtimePanda.columns = ['t', 'Uy_bottom', 'Uy_top', 'Wy_bottom', 'Wy_top', 'Ub', 'Px', 'Ut', 'Pt', 'CFL', 'dt']
+        else:
+            runtimePanda.columns = ['t', 'Uy_bottom', 'Uy_top', 'Wy_bottom', 'Wy_top', 'Ub', 'Px', 'Ut', 'Pt', 'CFL', 'dt', 'non', 'so'] # FIXME: controlla
+
+        if invert_sss: # if requested by user, invert sign of shear stress at top wall
+            runtimePanda['Uy_top'] = -runtimePanda['Uy_top']
+
+        return runtimePanda
