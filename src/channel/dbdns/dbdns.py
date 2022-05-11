@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+from os.path import exists
 
 
 
@@ -11,10 +12,13 @@ def load(fpath,**kwargs):
 
     sim = kwargs.get('sim', None)
 
+    if not exists(fpath):
+        return dict()
+        
     with open(fpath) as infile:
         db = json.load(infile)
     if sim:
-        db = db[sim]
+        db = db.get(sim,{})
 
     return db
 
@@ -183,3 +187,42 @@ class dbplot:
         print()
         print('\n'.join(sorted(lines.splitlines())))
         print()
+
+
+
+class softplot():
+
+    def __init__(self, fpath, **kwargs):
+        self.data = load(fpath)
+        self.outpath = kwargs.get('outpath', None)
+    
+    def plot(self,xkey,ykey):
+
+        # find out how many elements you need
+        ntot = 0
+        for sim in self.data:
+            if (xkey in self.data[sim]) and (ykey in self.data[sim]):
+                ntot += 1
+
+        # generate data series
+        x = np.zeros(ntot); y = np.zeros_like(x)
+        ii = 0
+        for sim in self.data:
+            if not ( (xkey in self.data[sim]) and (ykey in self.data[sim]) ):
+                continue
+            x[ii] = self.data[sim][xkey]
+            y[ii] = self.data[sim][ykey]
+            ii += 1
+
+        # plot
+        _, ax = plt.subplots()
+        ax.scatter(x,y,color='k',marker='x')
+        ax.set_xlabel(xkey)
+        ax.set_ylabel(ykey)
+
+        # save, if necessary
+        if self.outpath:
+            fname = self.outpath+'/'+ykey+'_'+xkey+'.dat'
+            with open(fname, 'w') as of:
+                for ii in range(ntot):
+                    of.write(str(x[ii])+ '\t' +str(y[ii]) + '\n')

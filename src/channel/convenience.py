@@ -247,3 +247,12 @@ def read_runtimedata(rtd_file, **kwargs):
             runtimePanda['Uy_top'] = -runtimePanda['Uy_top']
 
         return runtimePanda
+
+
+
+def get_bounds(fpath):
+    with open(fpath) as ff:
+        lu = ff.readline().split("!")[0].split()
+    lower = int(lu[0])
+    upper = int(lu[1])
+    return lower, upper     
