@@ -15,10 +15,11 @@ def read_psd(fdir, **kwargs):
 
     y_symm = kwargs.get('y_symm', True)
     
-    fname = fdir + 'spectra/' + 'psd.bin' # generate file name
+    fname = fdir # generate file name
 
     # fetch nx, ny, nz
-    dnsdict = ch.read_dnsin(fdir+'dns.in')
+    inpath = fdir.replace('psd.bin','../dns.in')
+    dnsdict = ch.read_dnsin(inpath)
     mesh = ch.mesh(dnsdict)
 
     # create memmap
