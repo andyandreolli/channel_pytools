@@ -198,21 +198,8 @@ class softplot():
     
     def plot(self,xkey,ykey):
 
-        # find out how many elements you need
-        ntot = 0
-        for sim in self.data:
-            if (xkey in self.data[sim]) and (ykey in self.data[sim]):
-                ntot += 1
-
-        # generate data series
-        x = np.zeros(ntot); y = np.zeros_like(x)
-        ii = 0
-        for sim in self.data:
-            if not ( (xkey in self.data[sim]) and (ykey in self.data[sim]) ):
-                continue
-            x[ii] = self.data[sim][xkey]
-            y[ii] = self.data[sim][ykey]
-            ii += 1
+        # get data
+        x, y = self.get_paired_series(xkey,ykey)
 
         # plot
         _, ax = plt.subplots()
@@ -223,6 +210,34 @@ class softplot():
         # save, if necessary
         if self.outpath:
             fname = self.outpath+'/'+ykey+'_'+xkey+'.dat'
-            with open(fname, 'w') as of:
-                for ii in range(ntot):
-                    of.write(str(x[ii])+ '\t' +str(y[ii]) + '\n')
+            self.dump_ascii(x,y,fname)
+
+    def get_paired_series(self, xkey, ykey):
+
+        # find out how many elements you need
+        ntot = 0
+        for sim in self.data:
+            if (xkey in self.data[sim]) and (ykey in self.data[sim]):
+                ntot += 1
+        
+        # generate data series
+        x = np.zeros(ntot); y = np.zeros_like(x)
+        ii = 0
+        for sim in self.data:
+            if not ( (xkey in self.data[sim]) and (ykey in self.data[sim]) ):
+                continue
+            x[ii] = self.data[sim][xkey]
+            y[ii] = self.data[sim][ykey]
+            ii += 1
+
+        return x, y
+
+    def dump_ascii(self, x, y, fname):
+        
+        ntot = len(x)
+        if not (ntot == len(y)):
+            raise IndexError('Mismatching size of input arrays (first two arguments)')
+
+        with open(fname, 'w') as of:
+            for ii in range(ntot):
+                of.write(str(x[ii])+ '\t' +str(y[ii]) + '\n')

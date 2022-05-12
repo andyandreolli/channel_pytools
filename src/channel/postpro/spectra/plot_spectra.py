@@ -157,7 +157,7 @@ def plot(all_spectra, component, desired_y, y, kx, kz, **kwargs):
 
 
 
-def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
+def plot_cumulative_zy(all_spectra, component, y, kz, beta, **kwargs):
 
     # unpack input
     save_size = kwargs.get('save_size', (1,1)); w = save_size[0]; h = save_size[1]
@@ -205,8 +205,8 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
     # sum along x-axis
     spectrum = spectrum.sum(axis=(-1))
 
-    # premultiply
-    premultiplied = spectrum * abs(kz)
+    # premultiply and divide by beta
+    premultiplied = spectrum * abs(kz) / beta
 
     # prepare figure for plotting
     rfig, (rax,cb_ax) = subplots(ncols=2,figsize=(10,7),gridspec_kw={"width_ratios":[1, 0.05]})
@@ -249,7 +249,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, **kwargs):
         if y_symm:
             ax.set_ylim(y[1], y[ymiddle])
         # save figure
-        savefig('spectra/'+save_name+'.png', format='png', bbox_inches='tight', pad_inches=0)
+        savefig(save_name+'.png', format='png', bbox_inches='tight', pad_inches=0)
         # save tikz code
         clim_min, clim_max = plt_handle.get_clim()
         generate_tikz(save_name, save_size, labels, fig_title, ax.get_xlim(), ax.get_ylim(), clim_min, clim_max, xlog=True, ylog=ylog)
@@ -393,7 +393,7 @@ def get_wavelength_inv(x):
 
 
 
-def generate_tex_colormap():
+def generate_tex_colormap(dir):
     # newcolors is the array to print
 
     ncolors = newcolors.shape[0]
@@ -407,7 +407,7 @@ def generate_tex_colormap():
     text += '''\t}
 }'''
 
-    with open('spectra/colorbar_settings.tex', 'w') as csets:
+    with open(dir+'/colorbar_settings.tex', 'w') as csets:
         csets.write(text)
 
 
@@ -452,11 +452,11 @@ def generate_tikz(fname, size, labels, title, xlim, ylim, clim_min, clim_max, **
              xmin={xlim[0]}, xmax={xlim[1]}, ymin={ylim[0]}, ymax={ylim[1]},
              scaled ticks=false,
             ]
-\\addplot graphics [xmin={xlim[0]}, xmax={xlim[1]}, ymin={ylim[0]}, ymax={ylim[1]},] {{{fname}.png}}; % add external png
+\\addplot graphics [xmin={xlim[0]}, xmax={xlim[1]}, ymin={ylim[0]}, ymax={ylim[1]},] {{{fname.split('/')[-1]}.png}}; % add external png
 \end{{axis}}
 \end{{tikzpicture}}
 \end{{document}}
 '''
 
-    with open('spectra/'+fname+'.tikz', 'w') as f: # TODO: fixme!
+    with open(fname+'.tikz', 'w') as f: # TODO: fixme!
         f.write(tikz_code)
