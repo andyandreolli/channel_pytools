@@ -157,9 +157,10 @@ def plot(all_spectra, component, desired_y, y, kx, kz, **kwargs):
 
 
 
-def plot_cumulative_zy(all_spectra, component, y, kz, beta, **kwargs):
+def plot_cumulative_zy(all_spectra, component, y, kk, beta, **kwargs):
 
     # unpack input
+    dirstr = kwargs.get('dir','z')
     save_size = kwargs.get('save_size', (1,1)); w = save_size[0]; h = save_size[1]
     save_fig = kwargs.get('save_fig', False) # you can pass a string to this (the name of the file that you want to save)
     y_symm = kwargs.get('y_symm', True)
@@ -178,7 +179,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, beta, **kwargs):
         # perform nondimensionalisation
         all_spectra /= (utau**2)
         y *= retau
-        kz /= retau
+        kk /= retau
     # calculate ymiddle
     ymiddle = int(np.ceil(len(y)/2))-1
 
@@ -191,10 +192,18 @@ def plot_cumulative_zy(all_spectra, component, y, kz, beta, **kwargs):
     labels = (r'$k_z$', r'$y$')
     xlabel_alt = r'$\lambda_z$'
     fig_title = r'$k_z\sum_{k_x} \langle \hat{'+cmp[0]+r'}^\dagger\hat{'+cmp[1]+r'} \rangle$'
+    if dirstr == 'x':
+        labels = (r'$k_x$', r'$y$')
+        xlabel_alt = r'$\lambda_x$'
+        fig_title = r'$k_z\sum_{k_z} \langle \hat{'+cmp[0]+r'}^\dagger\hat{'+cmp[1]+r'} \rangle$'
+    
     if isinstance(save_fig, str):
         save_name = save_fig
     else:
-        save_name = cmp + '_cumulative_zy'
+        addstr = '_cumulative_zy'
+        if dirstr == 'x':
+            addstr = '_cumulative_xy'
+        save_name = cmp + addstr
 
     # convert component to index
     idx = get_comp_idx(component)
@@ -202,11 +211,14 @@ def plot_cumulative_zy(all_spectra, component, y, kz, beta, **kwargs):
     # select desired spectrum component
     spectrum = all_spectra[idx, :, :, :]
 
-    # sum along x-axis
-    spectrum = spectrum.sum(axis=(-1))
+    
+    if dirstr == 'x': # sum along z-axis
+        spectrum = spectrum.sum(axis=(-2))
+    else: # sum along x-axis
+        spectrum = spectrum.sum(axis=(-1))
 
     # premultiply and divide by beta
-    premultiplied = spectrum * abs(kz) / beta
+    premultiplied = spectrum * abs(kk) / beta
 
     # prepare figure for plotting
     rfig, (rax,cb_ax) = subplots(ncols=2,figsize=(10,7),gridspec_kw={"width_ratios":[1, 0.05]})
@@ -217,7 +229,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, beta, **kwargs):
         rax.set_yscale("log")
 
     # when plotting, 0 modes are excluded
-    pos = rax.pcolormesh(kz[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
+    pos = rax.pcolormesh(kk[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
     if dclim:
         pos.set_clim(dclim[0],dclim[1])
     rax.set_xlabel(labels[0])
@@ -243,7 +255,7 @@ def plot_cumulative_zy(all_spectra, component, y, kz, beta, **kwargs):
         ax.set_xscale("log")
         if ylog:
             ax.set_yscale("log")
-        plt_handle = ax.pcolormesh(kz[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
+        plt_handle = ax.pcolormesh(kk[1:], y, premultiplied[:,1:], linewidth=0, rasterized=True,shading='gouraud',cmap=inferno_wr)
         if dclim:
             plt_handle.set_clim(dclim[0],dclim[1])
         if y_symm:
