@@ -11,3 +11,12 @@ def read_brutalbin(field, dnsin):
     field = field.reshape(((2*nz)+1, ny+1, (2*nx)+1, 3))
 
     return field
+
+
+
+def memmap_brutalbin(field, dnsin):
+    '''Reads the .bin file output by out_exporter/out2bin.f90 as a memmap (see numpy). Requires file name and name of dns.in file.'''
+    nn = get_dim_dnsin(dnsin)
+    nx=nn[0]; ny=nn[1]; nz=nn[2]
+    field = np.memmap(field, dtype=np.double, shape=((2*nz)+1, ny+1, (2*nx)+1, 3))
+    return field
