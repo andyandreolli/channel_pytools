@@ -10,18 +10,18 @@ def brutalbin_getgrid(nfo_file):
         
         # get first line
         currline = lines[0].split()
-        nxtot = currline[0]
-        nztot = currline[1]
-        dx = currline[2]
-        dz = currline[3]
+        nxtot = int(currline[0])
+        nztot = int(currline[1])
+        dx = float(currline[2])
+        dz = float(currline[3])
 
         # get second line
         currline = lines[1].split()
-        ny = currline[0]
-        nytot = currline[1]
-        a = currline[2]
-        ymin = currline[3]
-        ymax = currline[4]
+        ny = int(currline[0])
+        nytot = int(currline[1])
+        a = float(currline[2])
+        ymin = float(currline[3])
+        ymax = float(currline[4])
 
         # get shape for reading file
         shape = (nztot, nytot, nxtot, 3)
