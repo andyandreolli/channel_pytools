@@ -384,9 +384,9 @@ def get_comp_idx(component):
     elif component == 'xy' or component == 'yx' or component == 'uv' or component == 'vu':
         idx = 3
     elif component == 'xz' or component == 'zx' or component == 'uw' or component == 'wu':
-        idx = 4
-    elif component == 'zy' or component == 'yz' or component == 'wv' or component == 'vw':
         idx = 5
+    elif component == 'zy' or component == 'yz' or component == 'wv' or component == 'vw':
+        idx = 4
     elif not component == 'x' or component == 'uu' or component == 'u':
         print('Error: invalid component. Please pass either "x", "y", "z" as the second argument.')
     return idx
