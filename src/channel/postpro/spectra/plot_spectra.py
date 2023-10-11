@@ -1,5 +1,4 @@
 import numpy as np
-import h5py
 from matplotlib.pyplot import subplots, imshow, colorbar, savefig
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
