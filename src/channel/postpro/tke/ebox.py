@@ -10,7 +10,7 @@ has_been_set = False
 local_power = 0
 
 
-def get_properties(fdir, t_cnvrg, problem, uk, tau_w):
+def get_properties(fdir, problem, uk, tau_w):
 
     _, me, uv,  uu,  vv,  ww,  kk,  mk = uiuj.read(fdir, variant=None)
 
