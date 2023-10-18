@@ -241,3 +241,21 @@ class softplot():
         with open(fname, 'w') as of:
             for ii in range(ntot):
                 of.write(str(x[ii])+ '\t' +str(y[ii]) + '\n')
+
+    def dump_ascii_multi(self, fname, *vargs):
+    
+        ntot = len(vargs[0])
+        for inarr in vargs[1:]:
+            if not (ntot == len(inarr)):
+                raise IndexError('Mismatching size of input arrays')
+
+        with open(fname, 'w') as of:
+            for ii in range(ntot):
+                line = ''
+                for iv in range(len(vargs)):
+                    line = line + str(vargs[iv][ii])
+                    if iv == (len(vargs)-1):
+                        line = line + '\n'
+                    else:
+                        line = line + '\t'
+                of.write(line)
